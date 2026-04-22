@@ -1,0 +1,130 @@
+{
+  "folders": [
+    {
+      "name": "root",
+      "path": "."
+    },
+    {
+      "name": "frontend",
+      "path": "workflow-frontend"
+    },
+    {
+      "name": "gateway",
+      "path": "workflow-backend"
+    },
+    {
+      "name": "workers",
+      "path": "workers"
+    },
+    {
+      "name": "docker",
+      "path": "docker"
+    },
+    {
+      "name": "docs",
+      "path": "docs"
+    }
+  ],
+  "settings": {
+    // ── Editor ──────────────────────────────────────────────────────────────
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.rulers": [100],
+
+    // ── TypeScript ───────────────────────────────────────────────────────────
+    "typescript.tsdk": "workflow-frontend/node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+
+    // ── ESLint ───────────────────────────────────────────────────────────────
+    "eslint.workingDirectories": [
+      { "directory": "workflow-frontend", "changeProcessCWD": true },
+      { "directory": "workflow-backend", "changeProcessCWD": true },
+      { "directory": "workers", "changeProcessCWD": true }
+    ],
+    "eslint.validate": ["javascript", "typescript", "typescriptreact"],
+
+    // ── Tailwind ─────────────────────────────────────────────────────────────
+    "tailwindCSS.experimental.classRegex": [
+      ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+      ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+    ],
+
+    // ── Files ─────────────────────────────────────────────────────────────────
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/.next": true,
+      "**/dist": true,
+      "**/.turbo": true,
+      "**/coverage": true,
+      "data/**": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/.next": true,
+      "**/dist": true,
+      "**/.turbo": true,
+      "data/**": true,
+      "**/pnpm-lock.yaml": true
+    },
+
+    // ── SQLTools — PostgreSQL connection ──────────────────────────────────────
+    "sqltools.connections": [
+      {
+        "name": "elb-postgres",
+        "driver": "PostgreSQL",
+        "server": "localhost",
+        "port": 5432,
+        "database": "elb_platform",
+        "username": "elb",
+        "password": "elb_secret",
+        "previewLimit": 50,
+        "ssh": "Disabled"
+      }
+    ],
+
+    // ── Git ───────────────────────────────────────────────────────────────────
+    "git.autofetch": true,
+
+    // ── YAML (Temporal config, docker-compose) ────────────────────────────────
+    "yaml.schemas": {
+      "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": [
+        "docker/docker-compose.yml"
+      ]
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      // ── TypeScript / Core ───────────────────────────────────────────────
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "usernamehw.errorlens",
+
+      // ── Frontend — React / Next.js / Tailwind ───────────────────────────
+      "bradlc.vscode-tailwindcss",
+      "csstools.postcss",
+      "formulahendry.auto-rename-tag",
+      "heybourn.headwind",
+
+      // ── Database / Prisma ───────────────────────────────────────────────
+      "prisma.prisma",
+      "mtxr.sqltools",
+      "mtxr.sqltools-driver-pg",
+
+      // ── Docker / Infrastructure ─────────────────────────────────────────
+      "ms-azuretools.vscode-docker",
+      "redhat.vscode-yaml",
+
+      // ── Git ─────────────────────────────────────────────────────────────
+      "eamodio.gitlens",
+      "mhutchie.git-graph",
+
+      // ── Dev Experience ───────────────────────────────────────────────────
+      "humao.rest-client",
+      "rangav.vscode-thunder-client",
+      "mikestead.dotenv",
+      "christian-kohler.path-intellisense",
+      "wix.vscode-import-cost"
+    ]
+  }
+}
