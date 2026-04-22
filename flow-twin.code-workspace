@@ -6,11 +6,11 @@
     },
     {
       "name": "frontend",
-      "path": "workflow-frontend"
+      "path": "apps/frontend"
     },
     {
       "name": "gateway",
-      "path": "workflow-backend"
+      "path": "apps/gateway"
     },
     {
       "name": "workers",
@@ -33,13 +33,13 @@
     "editor.rulers": [100],
 
     // ── TypeScript ───────────────────────────────────────────────────────────
-    "typescript.tsdk": "workflow-frontend/node_modules/typescript/lib",
+    "typescript.tsdk": "apps/frontend/node_modules/typescript/lib",
     "typescript.enablePromptUseWorkspaceTsdk": true,
 
     // ── ESLint ───────────────────────────────────────────────────────────────
     "eslint.workingDirectories": [
-      { "directory": "workflow-frontend", "changeProcessCWD": true },
-      { "directory": "workflow-backend", "changeProcessCWD": true },
+      { "directory": "apps/frontend", "changeProcessCWD": true },
+      { "directory": "apps/gateway", "changeProcessCWD": true },
       { "directory": "workers", "changeProcessCWD": true }
     ],
     "eslint.validate": ["javascript", "typescript", "typescriptreact"],
@@ -51,9 +51,7 @@
     ],
 
     // ── Files ─────────────────────────────────────────────────────────────────
-    // Service folders are hidden from the root view — they appear as their own
-    // workspace roots (frontend, gateway, workers, docker, docs) so showing
-    // them inside root too would be duplicate noise.
+    // Service folders hidden from root — each is already its own workspace root
     "files.exclude": {
       "**/node_modules": true,
       "**/.next": true,
@@ -61,8 +59,7 @@
       "**/.turbo": true,
       "**/coverage": true,
       "data/**": true,
-      "workflow-frontend": true,
-      "workflow-backend": true,
+      "apps": true,
       "workers": true,
       "docker": true,
       "docs": true

@@ -1,4 +1,4 @@
-// Auto-extracted from workflow-frontend — single source of truth for node definitions
+// Auto-extracted from apps/frontend — single source of truth for node definitions
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const NODE_DEFINITIONS: any[] = [

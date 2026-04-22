@@ -32,8 +32,8 @@ Replacing paper SOPs and WhatsApp-based process tracking.
 - **Solo full-stack data engineer** building this alone
 - **No pressure, research phase** — building it right, not fast
 - **Stack running in Docker**: Temporal, Keycloak, PostgreSQL (all healthy via `docker/docker-compose.yml`)
-- **Frontend**: ~40% done — builder canvas, auth, dashboard, ENB run page, approvals, admin panel exist (`workflow-frontend/`)
-- **Backend**: Running — Fastify gateway on port 4000, auth/JWT, flows CRUD, batches, approvals, admin, audit-log routes; 6 DB migrations done (`workflow-backend/`)
+- **Frontend**: ~40% done — builder canvas, auth, dashboard, ENB run page, approvals, admin panel exist (`apps/frontend/`)
+- **Backend**: Running — Fastify gateway on port 4000, auth/JWT, flows CRUD, batches, approvals, admin, audit-log routes; 6 DB migrations done (`apps/gateway/`)
 - **Workers**: Skeleton running — form, db, execution workers in single monolith (`workers/`); split into dedicated workers is next
 - **POC goal**: one flow, 3 steps, 3 manual fields each, submit → approval → next step
 
@@ -507,9 +507,9 @@ Step 3 — Output Record
 
 ```
 /
-├── workflow-frontend/     → Next.js 15 + React Flow canvas + ENB shell
+├── apps/frontend/     → Next.js 15 + React Flow canvas + ENB shell
 │   └── src/app/           → (auth), (app)/builder, dashboard, run, approvals, admin
-├── workflow-backend/      → Fastify gateway (port 4000)
+├── apps/gateway/      → Fastify gateway (port 4000)
 │   ├── src/routes/        → flows, batches, approvals, admin, auth, health
 │   ├── src/plugins/       → auth, db, temporal, socketio, keycloak-admin
 │   └── prisma/            → schema + 6 migrations
@@ -529,7 +529,7 @@ Step 3 — Output Record
 ├── .claude/               → Claude Code project permissions and skill settings
 │   └── settings.json
 ├── package.json           → pnpm workspace root
-└── pnpm-workspace.yaml    → workspace: workflow-frontend, workflow-backend, workers, packages/*
+└── pnpm-workspace.yaml    → workspace: apps/frontend, apps/gateway, workers, packages/*
 ```
 
 ### Target Structure (pending rename)
@@ -554,7 +554,7 @@ Step 3 — Output Record
 └── package.json           → pnpm workspace root
 ```
 
-> Rename `workflow-frontend/` → `apps/frontend/` and `workflow-backend/` → `apps/gateway/`
+> Rename `apps/frontend/` → `apps/frontend/` and `apps/gateway/` → `apps/gateway/`
 > is pending. Do not rename until the full split of `workers/` into dedicated workers is ready —
 > both renames should happen together in one migration step.
 

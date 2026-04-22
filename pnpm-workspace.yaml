@@ -1,5 +1,4 @@
 packages:
-  - 'workflow-frontend'
-  - 'workflow-backend'
+  - 'apps/*'
   - 'workers'
   - 'packages/*'

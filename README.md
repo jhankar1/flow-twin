@@ -12,8 +12,8 @@ A no-code Industrial Digital Twin Platform — a visual workflow builder where d
 
 ```
 /
-├── workflow-frontend/     → Next.js 15 + React Flow canvas + ENB worker shell  [:3000]
-├── workflow-backend/      → Fastify API gateway (thin messenger to Temporal)    [:4000]
+├── apps/frontend/     → Next.js 15 + React Flow canvas + ENB worker shell  [:3000]
+├── apps/gateway/      → Fastify API gateway (thin messenger to Temporal)    [:4000]
 ├── workers/               → Temporal activity workers (form, db, execution)
 ├── docker/                → Docker Compose stack (PostgreSQL, Keycloak, Temporal)
 ├── config/                → Runtime config for all services (outside docker/)
@@ -100,7 +100,7 @@ elb-temporal-ui    running
 
 1. Open http://localhost:8080 → login with `admin` / `admin123`
 2. Create realm: `elb-platform`
-3. Create client: `workflow-backend` (type: Bearer-only)
+3. Create client: `apps/gateway` (type: Bearer-only)
 4. Add roles: `Designer`, `Worker`, `Supervisor`, `Manager`, `OrgAdmin`, `PlatformAdmin`
 5. Create a test user, assign the `Worker` role
 
@@ -111,17 +111,17 @@ Or drop a realm export JSON into `docker/init/keycloak/` — it auto-imports on 
 ## Step 4 — Backend (Fastify Gateway)
 
 ```bash
-cd workflow-backend
+cd apps/gateway
 cp .env.example .env
 ```
 
-Edit `workflow-backend/.env`:
+Edit `apps/gateway/.env`:
 
 ```env
 DATABASE_URL=postgresql://elb:elb_secret@localhost:5432/elb_platform
 KEYCLOAK_URL=http://localhost:8080
 KEYCLOAK_REALM=elb-platform
-KEYCLOAK_CLIENT_ID=workflow-backend
+KEYCLOAK_CLIENT_ID=apps/gateway
 TEMPORAL_ADDRESS=localhost:7233
 FRONTEND_URL=http://localhost:3000
 ```
@@ -158,7 +158,7 @@ pnpm dev
 ## Step 6 — Frontend
 
 ```bash
-cd workflow-frontend && pnpm dev
+cd apps/frontend && pnpm dev
 ```
 
 ---
@@ -170,13 +170,13 @@ cd workflow-frontend && pnpm dev
 pnpm infra:up
 
 # Terminal 2 — backend gateway
-cd workflow-backend && pnpm dev
+cd apps/gateway && pnpm dev
 
 # Terminal 3 — workers
 cd workers && pnpm dev
 
 # Terminal 4 — frontend
-cd workflow-frontend && pnpm dev
+cd apps/frontend && pnpm dev
 ```
 
 ---
@@ -221,7 +221,7 @@ Each step: Worker fills → Submits → Supervisor approves → Temporal advance
 |---|---|
 | Temporal won't start | Wait for postgres to be healthy: `docker compose ps` |
 | Worker can't connect to Temporal | Check `TEMPORAL_ADDRESS=localhost:7233` in `workers/.env` |
-| WebSocket not connecting | Check `FRONTEND_URL` in `workflow-backend/.env` matches `http://localhost:3000` |
+| WebSocket not connecting | Check `FRONTEND_URL` in `apps/gateway/.env` matches `http://localhost:3000` |
 | Prisma migration fails | Check `DATABASE_URL` uses `elb/elb_secret/elb_platform` |
 | Keycloak 502 on start | Keycloak starts slow — wait 60s, then: `docker compose logs -f keycloak` |
 | Form not appearing on ENB | Verify `workerId` matches in socket auth and the batch start request |

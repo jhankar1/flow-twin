@@ -25,7 +25,7 @@ data/
 
 # ─── Frontend Local Data ──────────────────────────────────────────────────────
 # Flow JSON files stored locally during dev (not for source control)
-workflow-frontend/data/
+apps/frontend/data/
 
 # ─── Test & Coverage ──────────────────────────────────────────────────────────
 coverage/

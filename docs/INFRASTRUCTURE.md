@@ -73,7 +73,7 @@ psql postgresql://elb:elb_secret@localhost:5432/elb_platform
 2. Open http://localhost:8080
 3. Login with `admin` / `admin123`
 4. Create realm: `elb-platform`
-5. Create client: `workflow-backend` (type: Bearer-only)
+5. Create client: `apps/gateway` (type: Bearer-only)
 6. Add roles: `Designer`, `Worker`, `Supervisor`, `Manager`, `OrgAdmin`, `PlatformAdmin`
 7. Create a test user and assign a role
 
@@ -81,12 +81,12 @@ Or drop a realm export JSON into `docker/init/keycloak/` — it auto-imports on 
 
 ## Connecting the Backend
 
-Update `workflow-backend/.env`:
+Update `apps/gateway/.env`:
 
 ```env
 DATABASE_URL=postgresql://elb:elb_secret@localhost:5432/elb_platform
 KEYCLOAK_URL=http://localhost:8080
 KEYCLOAK_REALM=elb-platform
-KEYCLOAK_CLIENT_ID=workflow-backend
+KEYCLOAK_CLIENT_ID=apps/gateway
 TEMPORAL_ADDRESS=localhost:7233
 ```
