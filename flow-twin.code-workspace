@@ -51,13 +51,21 @@
     ],
 
     // ── Files ─────────────────────────────────────────────────────────────────
+    // Service folders are hidden from the root view — they appear as their own
+    // workspace roots (frontend, gateway, workers, docker, docs) so showing
+    // them inside root too would be duplicate noise.
     "files.exclude": {
       "**/node_modules": true,
       "**/.next": true,
       "**/dist": true,
       "**/.turbo": true,
       "**/coverage": true,
-      "data/**": true
+      "data/**": true,
+      "workflow-frontend": true,
+      "workflow-backend": true,
+      "workers": true,
+      "docker": true,
+      "docs": true
     },
     "search.exclude": {
       "**/node_modules": true,
