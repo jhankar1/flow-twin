@@ -45,7 +45,8 @@ yarn-error.log*
 # ─── Editors & OS ─────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
-.vscode/settings.json
+.vscode/settings.json   # contains DB credentials — never commit
+# .vscode/extensions.json is committed so teammates get extension prompts
 .idea/
 
 # ─── Prisma ───────────────────────────────────────────────────────────────────
