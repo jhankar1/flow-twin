@@ -31,9 +31,10 @@ Replacing paper SOPs and WhatsApp-based process tracking.
 
 - **Solo full-stack data engineer** building this alone
 - **No pressure, research phase** — building it right, not fast
-- **Stack already running in Docker**: Temporal, Keycloak, PostgreSQL
-- **Frontend**: 30% done — React Flow canvas exists, BotaniFlow-based
-- **Backend**: not started — Fastify is next
+- **Stack running in Docker**: Temporal, Keycloak, PostgreSQL (all healthy via `docker/docker-compose.yml`)
+- **Frontend**: ~40% done — builder canvas, auth, dashboard, ENB run page, approvals, admin panel exist (`workflow-frontend/`)
+- **Backend**: Running — Fastify gateway on port 4000, auth/JWT, flows CRUD, batches, approvals, admin, audit-log routes; 6 DB migrations done (`workflow-backend/`)
+- **Workers**: Skeleton running — form, db, execution workers in single monolith (`workers/`); split into dedicated workers is next
 - **POC goal**: one flow, 3 steps, 3 manual fields each, submit → approval → next step
 
 ---
@@ -500,7 +501,38 @@ Step 3 — Output Record
 
 ---
 
-## Folder Structure (recommended)
+## Folder Structure
+
+### Current State (as of 2026-04-22)
+
+```
+/
+├── workflow-frontend/     → Next.js 15 + React Flow canvas + ENB shell
+│   └── src/app/           → (auth), (app)/builder, dashboard, run, approvals, admin
+├── workflow-backend/      → Fastify gateway (port 4000)
+│   ├── src/routes/        → flows, batches, approvals, admin, auth, health
+│   ├── src/plugins/       → auth, db, temporal, socketio, keycloak-admin
+│   └── prisma/            → schema + 6 migrations
+├── workers/               → Temporal workers (monolith — split planned)
+│   └── src/               → form/, db/, execution/ activities + workflows
+├── docker/                → Docker Compose stack
+│   ├── docker-compose.yml → PostgreSQL 16, Keycloak 24, Temporal 1.24, Temporal UI
+│   └── init/              → postgres SQL + keycloak realm JSON auto-imports
+├── config/                → Runtime service config (outside docker/ — version controlled)
+│   └── temporal/
+│       └── development-sql.yaml  → Temporal dynamic config
+├── data/                  → Persistent Docker volume data (gitignored)
+│   ├── postgres/          → PostgreSQL files
+│   └── keycloak/          → Keycloak sessions + realms
+├── docs/                  → Platform documentation (always update here)
+│   └── INFRASTRUCTURE.md
+├── .claude/               → Claude Code project permissions and skill settings
+│   └── settings.json
+├── package.json           → pnpm workspace root
+└── pnpm-workspace.yaml    → workspace: workflow-frontend, workflow-backend, workers, packages/*
+```
+
+### Target Structure (pending rename)
 
 ```
 /
@@ -516,10 +548,15 @@ Step 3 — Output Record
 ├── packages/
 │   ├── types/             → shared TypeScript types
 │   └── schema/            → Zod schemas shared across apps
-├── prisma/
-│   └── schema.prisma      → database schema
-└── docker-compose.yml     → all services including Temporal + Keycloak + PG
+├── docker/
+│   └── docker-compose.yml → all services
+├── docs/                  → all documentation
+└── package.json           → pnpm workspace root
 ```
+
+> Rename `workflow-frontend/` → `apps/frontend/` and `workflow-backend/` → `apps/gateway/`
+> is pending. Do not rename until the full split of `workers/` into dedicated workers is ready —
+> both renames should happen together in one migration step.
 
 ---
 

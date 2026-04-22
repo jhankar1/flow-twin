@@ -1,4 +1,2 @@
-.env
-
-# All persistent data (docker volumes mounted here)
-data/
+# Root .gitignore covers: node_modules/, .env, data/
+# Volume data lives at repo root /data — see root .gitignore

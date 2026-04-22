@@ -1,0 +1,54 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(npx prisma *)",
+      "Bash(tsx *)",
+      "Bash(ts-node *)",
+      "Bash(node *)",
+
+      "Bash(docker *)",
+      "Bash(docker compose *)",
+
+      "Bash(git status)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git pull *)",
+      "Bash(git remote *)",
+      "Bash(git mv *)",
+      "Bash(git rm *)",
+      "Bash(git branch *)",
+      "Bash(git checkout *)",
+      "Bash(git stash *)",
+      "Bash(git ls-remote *)",
+
+      "Bash(ls *)",
+      "Bash(ls)",
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(cat *)",
+      "Bash(echo *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(rm *)",
+      "Bash(touch *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(sort *)",
+      "Bash(wc *)",
+
+      "Bash(curl *)",
+      "Bash(psql *)",
+      "Bash(tctl *)",
+
+      "Bash(kill-port *)",
+      "Bash(kill *)"
+    ]
+  }
+}

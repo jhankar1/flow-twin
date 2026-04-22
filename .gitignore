@@ -1,4 +1,52 @@
+# ─── Dependencies ─────────────────────────────────────────────────────────────
 node_modules/
+.pnp
+.pnp.js
+
+# npm lockfiles — this repo uses pnpm; npm lockfiles are noise
+package-lock.json
+
+# ─── Build Outputs ────────────────────────────────────────────────────────────
+dist/
+build/
+out/
 .next/
+.turbo/
+*.tsbuildinfo
+
+# ─── Environment & Secrets ────────────────────────────────────────────────────
 .env
-.env.local
+.env.*
+!.env.example        # keep example files as documentation
+
+# ─── Persistent Docker Volume Data ───────────────────────────────────────────
+# Mounted from docker-compose as ../data/ — never commit DB or Keycloak files
+data/
+
+# ─── Frontend Local Data ──────────────────────────────────────────────────────
+# Flow JSON files stored locally during dev (not for source control)
+workflow-frontend/data/
+
+# ─── Test & Coverage ──────────────────────────────────────────────────────────
+coverage/
+.nyc_output/
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ─── Claude Code (local) ──────────────────────────────────────────────────────
+# Project settings are committed; local overrides are not
+.claude/settings.local.json
+
+# ─── Editors & OS ─────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/settings.json
+.idea/
+
+# ─── Prisma ───────────────────────────────────────────────────────────────────
+src/generated/prisma

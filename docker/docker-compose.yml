@@ -35,7 +35,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data
+      - ../data/postgres:/var/lib/postgresql/data
       - ./init/postgres:/docker-entrypoint-initdb.d   # optional init SQL scripts
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-elb} -d ${POSTGRES_DB:-elb_platform}"]
@@ -67,7 +67,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./data/keycloak:/opt/keycloak/data
+      - ../data/keycloak:/opt/keycloak/data
       - ./init/keycloak:/opt/keycloak/data/import   # realm JSON files auto-imported on start
     depends_on:
       postgres:
@@ -100,7 +100,7 @@ services:
     ports:
       - "7233:7233"    # Temporal gRPC — workers + frontend connect here
     volumes:
-      - ./config/temporal:/etc/temporal/config/dynamicconfig
+      - ../config/temporal:/etc/temporal/config/dynamicconfig
     depends_on:
       postgres:
         condition: service_healthy
