@@ -1,0 +1,10 @@
+# Temporal dynamic config — development defaults
+# Docs: https://docs.temporal.io/references/dynamic-configuration
+
+limit.maxIDLength:
+  - value: 255
+    constraints: {}
+
+system.forceSearchAttributesCacheRefreshOnRead:
+  - value: true
+    constraints: {}

@@ -1,0 +1,39 @@
+{
+  "name": "workflow-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch --clear-screen=false src/main.ts",
+    "dev:clean": "npx kill-port 4000 && tsx watch --clear-screen=false src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/cors": "^10.0.2",
+    "@fastify/oauth2": "^8.2.0",
+    "@fastify/websocket": "^11.2.0",
+    "@prisma/adapter-pg": "^7.6.0",
+    "@prisma/client": "^7.6.0",
+    "@temporalio/client": "^1.15.0",
+    "dotenv": "^17.4.0",
+    "fastify": "^5.2.1",
+    "fastify-plugin": "^5.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.1.0",
+    "pg": "^8.20.0",
+    "prisma": "^7.6.0",
+    "socket.io": "^4.8.3",
+    "uuid": "^11.0.5",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.13.10",
+    "@types/pg": "^8.20.0",
+    "kill-port": "^2.0.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}

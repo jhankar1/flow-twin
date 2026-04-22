@@ -1,0 +1,4 @@
+.env
+
+# All persistent data (docker volumes mounted here)
+data/

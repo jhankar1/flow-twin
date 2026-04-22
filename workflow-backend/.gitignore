@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+
+# PostgreSQL data (Docker volume mounted outside container)
+data/postgres/
+
+# Flow JSON files (file-based storage, not for git)
+data/flows/
+
+/src/generated/prisma

@@ -1,0 +1,62 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Flow {
+  id          String    @id @default(uuid())
+  name        String
+  category    String    @default("")
+  status      String    @default("draft")
+  nodes       Json      @default("[]")
+  edges       Json      @default("[]")
+  nodeCount   Int       @default(0)
+  savedAt     DateTime  @default(now()) @updatedAt
+  publishedAt DateTime?
+  batches     Batch[]
+
+  @@map("flows")
+}
+
+// ─── Batch — one run of a published flow ─────────────────────────────────────
+model Batch {
+  id            String       @id            // e.g. DEPT-2026-0001
+  flowId        String
+  workerId      String                       // Keycloak user ID
+  status        String       @default("running")  // running | complete | failed
+  currentNodeId String?
+  startedAt     DateTime     @default(now())
+  completedAt   DateTime?
+  flow          Flow         @relation(fields: [flowId], references: [id])
+  entries       BatchEntry[]
+
+  @@map("batches")
+}
+
+// ─── BatchEntry — submitted field values per node ─────────────────────────────
+model BatchEntry {
+  id          String   @id @default(uuid())
+  batchId     String
+  nodeId      String
+  fieldValues Json
+  submittedAt DateTime @default(now())
+  batch       Batch    @relation(fields: [batchId], references: [id])
+
+  @@map("batch_entries")
+}
+
+// ─── Department — written by DB Worker during flow execution ──────────────────
+model Department {
+  id          String   @id @default(uuid())
+  batchId     String                         // which batch created this record
+  deptName    String
+  description String
+  code        String   @unique
+  createdAt   DateTime @default(now())
+
+  @@map("departments")
+}

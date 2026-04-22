@@ -1,0 +1,140 @@
+version: "3.9"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ELB Platform — Infrastructure Stack
+#
+# Services:
+#   postgres    — Primary database (PostgreSQL 16)
+#   keycloak    — Auth & RBAC (Keycloak 24)
+#   temporal    — Workflow orchestration engine
+#   temporal-ui — Temporal Web UI
+#
+# Data volumes are stored in ./data/* (outside containers, never lost on restart)
+#
+# Usage:
+#   docker compose up -d                  → start all
+#   docker compose up -d postgres         → start only postgres
+#   docker compose down                   → stop all (data preserved)
+#   docker compose down -v                → stop + delete volumes (DESTRUCTIVE)
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # POSTGRESQL 16
+  # Primary database for all platform data
+  # ────────────────────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: elb-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-elb}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-elb_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-elb_platform}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+      - ./init/postgres:/docker-entrypoint-initdb.d   # optional init SQL scripts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-elb} -d ${POSTGRES_DB:-elb_platform}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - elb-network
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # KEYCLOAK 24
+  # Auth server — JWT issuer, RBAC, multi-tenant realms
+  # Admin console: http://localhost:8080
+  # ────────────────────────────────────────────────────────────────────────────
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: elb-keycloak
+    restart: unless-stopped
+    command: start-dev --import-realm
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-elb_platform}
+      KC_DB_USERNAME: ${POSTGRES_USER:-elb}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-elb_secret}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin123}
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data/keycloak:/opt/keycloak/data
+      - ./init/keycloak:/opt/keycloak/data/import   # realm JSON files auto-imported on start
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/realms/master || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    networks:
+      - elb-network
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # TEMPORAL SERVER
+  # Durable workflow orchestration engine
+  # Uses PostgreSQL as its persistence store
+  # ────────────────────────────────────────────────────────────────────────────
+  temporal:
+    image: temporalio/auto-setup:1.24
+    container_name: elb-temporal
+    restart: unless-stopped
+    environment:
+      DB: postgres12
+      DB_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER:-elb}
+      POSTGRES_PWD: ${POSTGRES_PASSWORD:-elb_secret}
+      POSTGRES_SEEDS: postgres
+      DYNAMIC_CONFIG_FILE_PATH: config/dynamicconfig/development-sql.yaml
+    ports:
+      - "7233:7233"    # Temporal gRPC — workers + frontend connect here
+    volumes:
+      - ./config/temporal:/etc/temporal/config/dynamicconfig
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "tctl", "--address", "temporal:7233", "cluster", "health"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    networks:
+      - elb-network
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # TEMPORAL UI
+  # Web dashboard — view workflows, activities, history
+  # http://localhost:8088
+  # ────────────────────────────────────────────────────────────────────────────
+  temporal-ui:
+    image: temporalio/ui:2.21.3
+    container_name: elb-temporal-ui
+    restart: unless-stopped
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_CORS_ORIGINS: http://localhost:8088
+    ports:
+      - "8088:8080"
+    depends_on:
+      - temporal
+    networks:
+      - elb-network
+
+# ─────────────────────────────────────────────────────────────────────────────
+# NETWORKS
+# ─────────────────────────────────────────────────────────────────────────────
+networks:
+  elb-network:
+    driver: bridge
