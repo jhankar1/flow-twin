@@ -1,5 +1,5 @@
 {
-  "name": "workers",
+  "name": "db-worker",
   "version": "1.0.0",
   "type": "module",
   "private": true,
@@ -7,7 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate --schema prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^6.9.0",
@@ -18,11 +18,10 @@
     "@temporalio/workflow": "^1.11.7",
     "dotenv": "^16.5.0",
     "pg": "^8.14.1",
-    "prisma": "^6.9.0",
-    "socket.io-client": "^4.8.1"
+    "prisma": "^6.9.0"
   },
   "devDependencies": {
-    "@types/node": "^22.13.10",
+    "@types/node": "^20",
     "@types/pg": "^8.11.11",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3"

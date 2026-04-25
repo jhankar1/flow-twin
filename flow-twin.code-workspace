@@ -2,28 +2,28 @@
   "folders": [
     {
       "name": "root",
-      "path": "."
+      "path": ".",
     },
     {
       "name": "frontend",
-      "path": "apps/frontend"
+      "path": "apps/frontend",
     },
     {
       "name": "gateway",
-      "path": "apps/gateway"
+      "path": "apps/gateway",
     },
     {
       "name": "workers",
-      "path": "workers"
+      "path": "workers",
     },
     {
       "name": "docker",
-      "path": "docker"
+      "path": "docker",
     },
     {
       "name": "docs",
-      "path": "docs"
-    }
+      "path": "docs",
+    },
   ],
   "settings": {
     // ── Editor ──────────────────────────────────────────────────────────────
@@ -40,14 +40,14 @@
     "eslint.workingDirectories": [
       { "directory": "apps/frontend", "changeProcessCWD": true },
       { "directory": "apps/gateway", "changeProcessCWD": true },
-      { "directory": "workers", "changeProcessCWD": true }
+      { "directory": "workers", "changeProcessCWD": true },
     ],
     "eslint.validate": ["javascript", "typescript", "typescriptreact"],
 
     // ── Tailwind ─────────────────────────────────────────────────────────────
     "tailwindCSS.experimental.classRegex": [
       ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
-      ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+      ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
     ],
 
     // ── Files ─────────────────────────────────────────────────────────────────
@@ -62,7 +62,7 @@
       "apps": true,
       "workers": true,
       "docker": true,
-      "docs": true
+      "docs": true,
     },
     "search.exclude": {
       "**/node_modules": true,
@@ -70,23 +70,11 @@
       "**/dist": true,
       "**/.turbo": true,
       "data/**": true,
-      "**/pnpm-lock.yaml": true
+      "**/pnpm-lock.yaml": true,
     },
 
     // ── SQLTools — PostgreSQL connection ──────────────────────────────────────
-    "sqltools.connections": [
-      {
-        "name": "elb-postgres",
-        "driver": "PostgreSQL",
-        "server": "localhost",
-        "port": 5432,
-        "database": "elb_platform",
-        "username": "elb",
-        "password": "elb_secret",
-        "previewLimit": 50,
-        "ssh": "Disabled"
-      }
-    ],
+    "sqltools.connections": [],
 
     // ── Git ───────────────────────────────────────────────────────────────────
     "git.autofetch": true,
@@ -94,9 +82,9 @@
     // ── YAML (Temporal config, docker-compose) ────────────────────────────────
     "yaml.schemas": {
       "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": [
-        "docker/docker-compose.yml"
-      ]
-    }
+        "docker/docker-compose.yml",
+      ],
+    },
   },
   "extensions": {
     "recommendations": [
@@ -129,7 +117,7 @@
       "rangav.vscode-thunder-client",
       "mikestead.dotenv",
       "christian-kohler.path-intellisense",
-      "wix.vscode-import-cost"
-    ]
-  }
+      "wix.vscode-import-cost",
+    ],
+  },
 }

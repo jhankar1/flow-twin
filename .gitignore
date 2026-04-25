@@ -49,5 +49,7 @@ Thumbs.db
 # .vscode/extensions.json is committed so teammates get extension prompts
 .idea/
 
-# ─── Prisma ───────────────────────────────────────────────────────────────────
-src/generated/prisma
+# ─── Prisma generated clients ────────────────────────────────────────────────
+src/generated/
+**/src/generated/
+**/prisma/generated/

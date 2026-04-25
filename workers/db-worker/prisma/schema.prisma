@@ -1,0 +1,99 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Flow {
+  id           String    @id @default(uuid())
+  name         String
+  category     String    @default("")
+  status       String    @default("draft")
+  flowType        String    @default("general")   // "general" | "node" | "master"
+  outputSchema    Json      @default("[]")         // [{ key, label, type }] — declared outputs for node flows
+  visibleToRoles  Json      @default("[]")         // [] = visible to all; ["Worker","Manager"] = role-restricted
+  runnableByRoles Json      @default("[]")         // [] = runnable by all; role list = restricted
+  nodes        Json      @default("[]")
+  edges        Json      @default("[]")
+  nodeCount    Int       @default(0)
+  savedAt      DateTime  @default(now()) @updatedAt
+  publishedAt  DateTime?
+  batches      Batch[]
+
+  @@map("flows")
+}
+
+// ─── Batch — one run of a published flow ─────────────────────────────────────
+model Batch {
+  id            String       @id            // e.g. DEPT-2026-0001
+  flowId        String
+  workerId      String                       // Keycloak user ID
+  status        String       @default("running")  // running | complete | failed
+  currentNodeId String?
+  startedAt     DateTime     @default(now())
+  completedAt   DateTime?
+  flow          Flow         @relation(fields: [flowId], references: [id])
+  entries       BatchEntry[]
+
+  @@map("batches")
+}
+
+// ─── BatchEntry — submitted field values per node ─────────────────────────────
+model BatchEntry {
+  id          String   @id @default(uuid())
+  batchId     String
+  nodeId      String
+  fieldValues Json
+  submittedAt DateTime @default(now())
+  batch       Batch    @relation(fields: [batchId], references: [id])
+
+  @@map("batch_entries")
+}
+
+// ─── ApprovalRequest — human-in-the-loop approval flow ───────────────────────
+model ApprovalRequest {
+  id            String    @id @default(uuid())
+  title         String
+  description   String    @default("")
+  fieldValues   Json      @default("{}")
+  submittedBy   String                        // Keycloak user ID
+  submitterName String
+  status        String    @default("pending") // pending | approved | rejected
+  decidedBy     String?
+  deciderName   String?
+  reason        String?
+  createdAt     DateTime  @default(now())
+  decidedAt     DateTime?
+
+  @@map("approval_requests")
+}
+
+// ─── AuditLog — every user action recorded here ───────────────────────────────
+model AuditLog {
+  id         String   @id @default(uuid())
+  action     String                         // e.g. "flow.save", "approval.submit"
+  entity     String                         // e.g. "flow", "approval", "user"
+  entityId   String?                        // ID of the affected record
+  userId     String
+  userName   String
+  meta       Json     @default("{}")        // extra context (old/new values etc.)
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+// ─── Department — written by DB Worker during flow execution ──────────────────
+model Department {
+  id          String   @id @default(uuid())
+  batchId     String                         // which batch created this record
+  deptName    String
+  description String
+  code        String   @unique
+  createdAt   DateTime @default(now())
+
+  @@map("departments")
+}
